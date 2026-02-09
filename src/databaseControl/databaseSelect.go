@@ -12,24 +12,31 @@ type Test struct {
 }
 
 // selecting from db all data.
-func SelectFromDBrow(db *sql.DB) {
-	var test Test
+func SelectFromDBrow(db *sql.DB) []Test {
+	var tests []Test
 	query := "SELECT id, name, note FROM notes"
-	rows, _ := db.Query(query)
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Println("Error while selecting from DataBase: ", err)
+	}
+	defer rows.Close()
+
 	var id int
 	var name string
 	var note string
 
 	for rows.Next() {
 		rows.Scan(&id, &name, &note)
-		test.ID = id
-		test.Name = name
-		test.Note = note
-		log.Println("ID: ", test.ID, "Name: ", test.Name, "Note:", test.Note)
+
+		test := Test{ID: id, Name: name, Note: note}
+
+		tests = append(tests, test)
 	}
+
+	return tests
 }
 
-// selecting from db by name.
+// selecting from db by name.  //завтра зробить!!!
 func SelectFromDBbyName() {
 	return
 }

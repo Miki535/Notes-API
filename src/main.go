@@ -50,16 +50,15 @@ func main() {
 		//	})
 		//	return
 		//}
-		databasecontrol.SelectFromDBrow(db)
+		//databasecontrol.SelectFromDBrow(db)
 		c.JSON(http.StatusOK, gin.H{
 			"status": "All good!",
 		})
 	})
 
-	router.GET(".getAllNotes", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "This is getallnotes endpoint",
-		})
+	router.GET("/getAllNotes", func(c *gin.Context) {
+		notes := databasecontrol.SelectFromDBrow(db)
+		c.JSON(200, notes)
 	})
 
 	router.Run() //running on localhost:8080
