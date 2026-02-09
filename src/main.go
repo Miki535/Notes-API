@@ -16,6 +16,10 @@ type Notes struct {
 	Note string
 }
 
+type Request struct {
+	Name string
+}
+
 func main() {
 	db, err := sql.Open("sqlite3", "./sqlite-database.db")
 	if err != nil {
@@ -44,8 +48,16 @@ func main() {
 	})
 
 	router.GET("/getNoteByName", func(c *gin.Context) {
+		var request Request
+		if err := c.ShouldBind(&request); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "bad JSON request",
+			})
+			return
+		}
+		databasecontrol.SelectFromDB(db, request.Name)
 		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello World!",
+			"status": "All good!",
 		})
 	})
 
