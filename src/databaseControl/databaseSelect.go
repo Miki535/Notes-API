@@ -12,7 +12,7 @@ type Test struct {
 }
 
 // selecting from db all data.
-func SelectFromDBrow(db *sql.DB) []Test {
+func SelectFromDBallRow(db *sql.DB) []Test {
 	var tests []Test
 	query := "SELECT id, name, note FROM notes"
 	rows, err := db.Query(query)
@@ -37,6 +37,12 @@ func SelectFromDBrow(db *sql.DB) []Test {
 }
 
 // selecting from db by name.  //завтра зробить!!!
-func SelectFromDBbyName() {
-	return
+func SelectFromDBbyName(db *sql.DB, name string) {
+	query := ""
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Println("Error while selecting from solo from DataBase: ", err)
+	}
+	defer rows.Close()
+
 }

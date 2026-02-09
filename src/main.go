@@ -38,9 +38,7 @@ func main() {
 		}
 		databasecontrol.InsertNote(db, notes.Name, notes.Note)
 
-		c.JSON(200, gin.H{
-			"result: ": "All good!",
-		})
+		c.JSON(200, 200)
 	})
 
 	router.GET("/getNoteByName", func(c *gin.Context) {
@@ -57,7 +55,7 @@ func main() {
 	})
 
 	router.GET("/getAllNotes", func(c *gin.Context) {
-		notes := databasecontrol.SelectFromDBrow(db)
+		notes := databasecontrol.SelectFromDBallRow(db)
 		c.JSON(200, notes)
 	})
 
