@@ -1,0 +1,5 @@
+package databasecontrol
+
+func SelectFromDB() {
+
+}
