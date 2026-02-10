@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func InsertNote(db *sql.DB, name string, note string) {
+func InsertNote(db *sql.DB, name string, note string) error {
 	insertNoteSQL := `INSERT INTO notes(name, note) VALUES (?, ?)`
 	statement, err := db.Prepare(insertNoteSQL)
 	if err != nil {
@@ -15,6 +15,7 @@ func InsertNote(db *sql.DB, name string, note string) {
 	_, err = statement.Exec(name, note)
 	if err != nil {
 		log.Println("Error inserting notes")
-		return
+		return err
 	}
+	return nil
 }

@@ -31,7 +31,7 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"POST", "GET", "OPTIONS"},
-		AllowHeaders:     []string{"Contenr-Type"},
+		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
 	}))
 
@@ -44,15 +44,26 @@ func main() {
 			})
 			return
 		}
-		databasecontrol.InsertNote(db, notes.Name, notes.Note)
-
+		err := databasecontrol.InsertNote(db, notes.Name, notes.Note)
+		if err != nil {
+			c.JSON(404, gin.H{
+				"status": "error while inserting information in /postNote",
+			})
+		}
 		c.JSON(200, gin.H{
 			"status": "ok",
 		})
 	})
 
 	router.GET("/getNoteByName", func(c *gin.Context) {
-		note, err := databasecontrol.SelectFromDbByName(db, "firstNote")
+		name := c.Query("name")
+		if name == "" {
+			c.JSON(400, gin.H{
+				"status": "error, query parameter is required",
+			})
+			return
+		}
+		note, err := databasecontrol.SelectFromDbByName(db, name)
 		if err != nil {
 			log.Println("Error: ", err)
 			return
@@ -61,7 +72,12 @@ func main() {
 	})
 
 	router.GET("/getAllNotes", func(c *gin.Context) {
-		notes := databasecontrol.SelectFromDBallRow(db)
+		notes, err := databasecontrol.SelectFromDBallRow(db)
+		if err != nil {
+			c.JSON(404, gin.H{
+				"status": "error while get information from /getAllNotes",
+			})
+		}
 		c.JSON(200, notes)
 	})
 

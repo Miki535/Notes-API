@@ -12,7 +12,7 @@ type Test struct {
 }
 
 // selecting from db all data.
-func SelectFromDBallRow(db *sql.DB) []Test {
+func SelectFromDBallRow(db *sql.DB) ([]Test, error) {
 	var tests []Test
 	query := "SELECT id, name, note FROM notes"
 	rows, err := db.Query(query)
@@ -33,7 +33,7 @@ func SelectFromDBallRow(db *sql.DB) []Test {
 		tests = append(tests, test)
 	}
 
-	return tests
+	return tests, nil
 }
 
 // selecting from db by name.
