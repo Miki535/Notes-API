@@ -6,6 +6,7 @@ import (
 	"net/http"
 	databasecontrol "notes-api/databaseControl"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -26,6 +27,13 @@ func main() {
 	databasecontrol.CreateTable(db)
 
 	router := gin.Default()
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"POST", "GET", "OPTIONS"},
+		AllowHeaders:     []string{"Contenr-Type"},
+		AllowCredentials: true,
+	}))
 
 	router.POST("/postNote", func(c *gin.Context) {
 		var notes Notes
