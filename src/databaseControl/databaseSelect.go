@@ -36,13 +36,26 @@ func SelectFromDBallRow(db *sql.DB) []Test {
 	return tests
 }
 
-// selecting from db by name.  //завтра зробить!!!
-func SelectFromDBbyName(db *sql.DB, name string) {
-	query := ""
-	rows, err := db.Query(query)
+// selecting from db by name.
+func SelectFromDbByName(db *sql.DB, name string) ([]Test, error) {
+	query := "SELECT * FROM notes WHERE name = ?"
+	rows, err := db.Query(query, name)
 	if err != nil {
 		log.Println("Error while selecting from solo from DataBase: ", err)
 	}
 	defer rows.Close()
 
+	tests := make([]Test, 0)
+
+	for rows.Next() {
+		var t Test
+		if err := rows.Scan(&t.ID, &t.Name, &t.Note); err != nil {
+			return nil, err
+		}
+		tests = append(tests, t)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return tests, nil
 }

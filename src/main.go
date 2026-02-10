@@ -42,16 +42,12 @@ func main() {
 	})
 
 	router.GET("/getNoteByName", func(c *gin.Context) {
-		//if err := c.ShouldBind(&request); err != nil {
-		//	c.JSON(http.StatusBadRequest, gin.H{
-		//		"error": "bad JSON request",
-		//	})
-		//	return
-		//}
-		//databasecontrol.SelectFromDBrow(db)
-		c.JSON(http.StatusOK, gin.H{
-			"status": "All good!",
-		})
+		note, err := databasecontrol.SelectFromDbByName(db, "firstNote")
+		if err != nil {
+			log.Println("Error: ", err)
+			return
+		}
+		c.JSON(200, note)
 	})
 
 	router.GET("/getAllNotes", func(c *gin.Context) {
